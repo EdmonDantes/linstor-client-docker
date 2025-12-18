@@ -10,7 +10,7 @@ RUN mkdir -p /src
 
 WORKDIR /src
 
-# Install git in alpine
+# Install git and make in alpine
 RUN if [ -n "$(which apk)" ]; then \
     apk add --no-cache git make;  \
     fi;
@@ -34,8 +34,12 @@ RUN git checkout "$(git describe --tags --abbrev=0)" &&  \
     sed -i 's/\s*"python3-setuptools"/        "setuptools",/' setup.py && \
     pip3 install --no-cache-dir .
 
-RUN rm -r /src && \
-    apk del --purge make
+RUN rm -r /src
+
+# Delete git and make in alpine
+RUN if [ -n "$(which apk)" ]; then \
+    apk del --purge git make;  \
+    fi;
 
 WORKDIR /
 
