@@ -62,9 +62,13 @@ jobs:
         run: |
           sed -i "s/.*FROM.*/FROM ${{ env.BASE_NAME }}:${{ env.BASE_TAG }}/" Dockerfile
 
+      - name: Show Dockerfile
+        run: cat Dockerfile
+
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           push: true
+          file: Dockerfile
           platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x,linux/riscv64
           tags: dantes2104/linstor-client-docker:${{ env.BASE_TAG }},ghcr.io/edmondantes/linstor-client-docker:${{ env.BASE_TAG }}
