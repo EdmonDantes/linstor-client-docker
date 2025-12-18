@@ -1,0 +1,67 @@
+name: Publish Docker Image
+
+on:
+  release:
+    types: [ published ]
+  schedule:
+    - cron: '0 3 * * 3'
+  workflow_dispatch:
+
+jobs:
+  push_to_registries:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    strategy:
+      matrix:
+        variant: [ "", slim, rc, rc-slim ]
+        os: [ "", trixie, bookworm, alpine ]
+        exclude:
+          - os: alpine
+            variant: slim
+          - os: alpine
+            variant: rc-slim
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Determine root image name
+        run: |
+          echo "BASE_NAME=$(grep -m1 '^FROM' Dockerfile | cut -d' ' -f2 | cut -d':' -f1)" >> $GITHUB_ENV
+
+      - name: Determine root image tag
+        run: |
+          if [[ -n "${{ matrix.os }}" && -n "${{ matrix.variant }}" ]]; then
+            echo "BASE_TAG=${{ matrix.os }}-${{ matrix.variant }}" >> $GITHUB_ENV
+          elif [[ -z "${{ matrix.os }}" && -z "${{ matrix.variant }}" ]]; then
+            echo "BASE_TAG=latest" >> $GITHUB_ENV
+          else
+            echo "BASE_TAG=${{ matrix.os }}${{ matrix.variant }}" >> $GITHUB_ENV
+          fi
+      - name: Set correct base image
+        run: |
+          sed -i "s/.*FROM.*/FROM ${{ env.BASE_NAME }}:${{ env.BASE_TAG }}/" Dockerfile
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x,linux/riscv64
+          tags: dantes2104/linstor-client-docker:${{ env.BASE_TAG }},ghcr.io/edmondantes/linstor-client-docker:${{ env.BASE_TAG }}
