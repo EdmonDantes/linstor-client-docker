@@ -9,7 +9,7 @@ __If you want to use official images and utils or/and support developers, please
 Run docker container to start linstor client
 
 ```bash
-docker run --rm dantes2104/linstor-client-docker:latest [args]
+docker run --rm dantes2104/linstor-client-docker:alpine [args]
 ```
 
 ### Image Variants
