@@ -57,12 +57,13 @@ jobs:
       - name: Determine root image tag
         run: |
           if [[ -n "${{ matrix.os }}" && -n "${{ matrix.variant }}" ]]; then
-            echo "BASE_TAG=${{ matrix.os }}-${{ matrix.variant }}" >> $GITHUB_ENV
+            echo "BASE_TAG=${{ matrix.variant }}-${{ matrix.os }}" >> $GITHUB_ENV
           elif [[ -z "${{ matrix.os }}" && -z "${{ matrix.variant }}" ]]; then
             echo "BASE_TAG=latest" >> $GITHUB_ENV
           else
             echo "BASE_TAG=${{ matrix.os }}${{ matrix.variant }}" >> $GITHUB_ENV
           fi
+
       - name: Set correct base image
         run: |
           sed -i "s/.*FROM.*/FROM ${{ env.BASE_NAME }}:${{ env.BASE_TAG }}/" Dockerfile
