@@ -27,6 +27,8 @@ jobs:
             variant: slim
           - os: trixie
             variant: rc-slim
+          - os: ""
+            variant: rc
     steps:
       - name: Check out the repo
         uses: actions/checkout@v5
