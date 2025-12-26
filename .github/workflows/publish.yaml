@@ -63,6 +63,13 @@ jobs:
         run: |
           sed -i "s/.*FROM.*/FROM ${{ env.BASE_NAME }}:${{ env.BASE_TAG }}/" Dockerfile
 
+      - name: Define correct arhitectures
+        run: |
+          echo "ARCH=linux/amd64,linux/arm64/v8" >> $GITHUB_ENV 
+          if [[ "${{ matrix.os }}" == "trixie" || -z "${{ matrix.os }}" ]]; then
+            echo "ARCH=${{ env.ARCH }},linux/riscv64" >> $GITHUB_ENV
+          fi
+
       - name: Show Dockerfile
         run: cat Dockerfile
 
@@ -72,5 +79,5 @@ jobs:
           push: true
           file: Dockerfile
           context: .
-          platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x,linux/riscv64
+          platforms: "${{ env.ARCH }}"
           tags: dantes2104/linstor-client-docker:${{ env.BASE_TAG }},ghcr.io/edmondantes/linstor-client-docker:${{ env.BASE_TAG }}
