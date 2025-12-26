@@ -65,9 +65,10 @@ jobs:
 
       - name: Define correct arhitectures
         run: |
-          echo "ARCH=linux/amd64,linux/arm64/v8" >> $GITHUB_ENV 
           if [[ "${{ matrix.os }}" == "trixie" || -z "${{ matrix.os }}" ]]; then
-            echo "ARCH=${{ env.ARCH }},linux/riscv64" >> $GITHUB_ENV
+            echo "ARCH=linux/amd64,linux/arm64/v8,linux/riscv64" >> $GITHUB_ENV
+          else
+            echo "ARCH=linux/amd64,linux/arm64/v8" >> $GITHUB_ENV
           fi
 
       - name: Show Dockerfile
