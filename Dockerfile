@@ -13,6 +13,10 @@ WORKDIR /src
 # Install git and make in alpine
 RUN if [ -n "$(which apk)" ]; then \
     apk add --no-cache git make;  \
+    else \
+    apt-get update; \
+    apt-get install -y --no-install-recommends git make; \
+    rm -rf /var/lib/apt/lists/*; \
     fi;
 
 RUN git clone --recursive https://github.com/LINBIT/linstor-api-py.git linstor-api-py
@@ -41,6 +45,8 @@ RUN rm -r /src
 # Delete git and make in alpine
 RUN if [ -n "$(which apk)" ]; then \
     apk del --purge git make;  \
+    else \
+    apt-get purge -y git make; \
     fi;
 
 WORKDIR /
