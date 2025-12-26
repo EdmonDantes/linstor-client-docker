@@ -23,6 +23,10 @@ jobs:
             variant: slim
           - os: alpine
             variant: rc-slim
+          - os: trixie
+            variant: slim
+          - os: trixie
+            variant: rc-slim
     steps:
       - name: Check out the repo
         uses: actions/checkout@v5
