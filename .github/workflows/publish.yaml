@@ -16,19 +16,11 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        variant: [ "", slim, rc, rc-slim ]
+        variant: [ "", slim ]
         os: [ "", trixie, bookworm, alpine ]
         exclude:
           - os: alpine
             variant: slim
-          - os: alpine
-            variant: rc-slim
-          - os: trixie
-            variant: slim
-          - os: trixie
-            variant: rc-slim
-          - os: ""
-            variant: rc
     steps:
       - name: Check out the repo
         uses: actions/checkout@v5

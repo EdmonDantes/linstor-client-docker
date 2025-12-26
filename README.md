@@ -14,7 +14,7 @@ docker run --rm dantes2104/linstor-client-docker:latest [args]
 
 ### Image Variants
 
-You can use all [possible variants](https://hub.docker.com/_/python#image-variants) of `python` docker image except `windowsservercore`.
+You can use some [variants](https://hub.docker.com/_/python#image-variants) of `python` docker image.
 
 Here is the list of available variants:
 - `alpine`
@@ -23,13 +23,6 @@ Here is the list of available variants:
 - `slim`
 - `slim-trixie`
 - `slim-bookworm`
-- `rc`
-- `rc-trixie`
-- `rc-bookworm`
-- `rc-alpine`
-- `rc-slim`
-- `rc-slim-trixie`
-- `rc-slim-bookworm`
 
 ## Build
 
