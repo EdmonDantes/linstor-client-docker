@@ -32,6 +32,8 @@ WORKDIR /src/linstor-client
 RUN git checkout "$(git describe --tags --abbrev=0)" &&  \
     git submodule update && \
     sed -i 's/\s*"python3-setuptools"/        "setuptools",/' setup.py && \
+    sed -i "s/def\s*get_terminal_size(\s*):\s*/def old_get_terminal_size():/" linstor_client/table.py && \
+    printf "def get_terminal_size():\n\timport shutil\n\treturn tuple(shutil.get_terminal_size((80, 20)))" >> linstor_client/table.py && \
     pip3 install --no-cache-dir .
 
 RUN rm -r /src
