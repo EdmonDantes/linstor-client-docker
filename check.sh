@@ -1,7 +1,5 @@
 #!/bin/bash
 
-for i in $(find -name "Dockerfile*" -type f); do
-  if ! docker run --rm -v "./:/app" hadolint/hadolint hadolint "/app/$i"; then
-    exit 1
-  fi
-done
+find . -name "*.sh" -type f -exec docker run --rm -v "./:/app" koalaman/shellcheck:stable "/app/{}" ';'
+
+find . -name "Dockerfile*" -type f -exec docker run --rm -v "./:/app" hadolint/hadolint hadolint "/app/{}" ';'
